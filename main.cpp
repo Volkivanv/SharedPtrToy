@@ -49,7 +49,7 @@ public:
         int i = *numPtr;
         i++;
         *numPtr = i;
-        std::cout<<"Use operator"<<std::endl;
+
 
         return *this;
     }
