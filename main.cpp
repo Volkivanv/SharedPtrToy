@@ -32,43 +32,40 @@ public:
     SharedPtrToy(const SharedPtrToy& other){
         toy = other.toy;
         numPtr = other.numPtr;
-        int i = *numPtr;
-        i++;
-        *numPtr = i;
+        ++*numPtr;
 
-      //  *(numPtr)++;
     }
 
     SharedPtrToy& operator = (const SharedPtrToy& other){
         if (this == &other)
             return *this;
-        if(toy != nullptr)
-            delete toy;
+        if(toy != nullptr){
+            --*numPtr;
+            //std::cout<<*numPtr<<std::endl;
+            if(*numPtr == 0){
+                delete numPtr;
+                delete toy;
+            }
+
+        }
+
         toy = other.toy;
         numPtr = other.numPtr;
-        int i = *numPtr;
-        i++;
-        *numPtr = i;
+        ++*numPtr;
 
 
         return *this;
     }
 
     ~SharedPtrToy(){
-        if((*numPtr <= 1)&&(toy!= nullptr)) {
-            delete toy;
-        } else {
-            int i = *numPtr;
-            i--;
-            *numPtr = i;
-           // toy = nullptr;
+        if(toy != nullptr){
+            --*numPtr;
+            if(*numPtr == 0){
+                delete numPtr;
+                delete toy;
+            }
         }
-
-
     }
-
-
-
 };
 
 Toy makeSharedToy(std::string inName){
@@ -90,12 +87,14 @@ int main() {
     auto sA = new SharedPtrToy("Bone");
     auto sB = new SharedPtrToy(*sA);
     auto sC = new SharedPtrToy(a);
-    SharedPtrToy sD = *sC;
+    auto sD = new SharedPtrToy(*sB);
+     *sD = *sC;
     SharedPtrToy sE(*sC);
 
     delete sA;
     delete sB;
     delete sC;
+    delete sD;
   //  delete sD;
 
   //  SharedPtrToy sC = *sB;
